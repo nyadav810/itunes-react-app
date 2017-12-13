@@ -1,0 +1,12 @@
+input[type=search] {
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 35px;
+}
+
+.btn {
+    margin-top: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 100px;
+}
