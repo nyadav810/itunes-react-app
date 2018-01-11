@@ -8,13 +8,14 @@ class SearchContainer extends React.Component {
         super(props);
 
         this.state = {
-            albums: [],             // list of albums
-            searchDone: false       // search results indicator
+            results: [],             // list of albums
+            searchDone: false,       // search results indicator
+            media: 'music'
         };
     }
 
-    handleSubmit = artist => {
-        let url = `https://itunes.apple.com/search?term=${artist}&entity=album`;
+    handleSubmit = (artist, media) => {
+        let url = `https://itunes.apple.com/search?term=${artist}&media=${media}`;
 
         // make iTunes API GET request
         fetch(url).then(response => {
@@ -27,14 +28,27 @@ class SearchContainer extends React.Component {
             }
             return new Error("Request failed!");
         }).then(jsonResponse => {
-            this.parseAlbums(jsonResponse.results);
+            switch (media) {
+                case 'music':
+                    this.parseAlbums(jsonResponse.results);
+                    break;
+                case 'movie':
+                    this.parseMovies(jsonResponse.results);
+                    break;
+                case 'tvShow':
+                    this.parseTv(jsonResponse.results);
+                    break;
+                default:
+                    break;
+            }
         });
     }
 
     handleReset = () => {
         this.setState({
-            albums: [],
-            searchDone: false
+            results: [],
+            searchDone: false,
+            media: 'music'
         });
     }
 
@@ -51,18 +65,56 @@ class SearchContainer extends React.Component {
             });
         });
         this.setState({
-            albums: albums
+            results: albums,
+            media: 'music'
+        });
+    }
+
+    parseMovies = results => {
+        let movies = [];
+        results.forEach(result => {
+            let id = result.trackId ? result.trackId : result.collectionId;
+            let name = result.trackName ? result.trackName : result.collectionName;
+
+            movies.push({
+                id: id,
+                name: name,
+                artworkSrc: result.artworkUrl100
+            });
+        });
+        this.setState({
+            results: movies,
+            media: 'movie'
+        });
+    }
+
+    parseTv = results => {
+        let tv = [];
+        results.forEach(result => {
+            let id = result.trackId ? result.trackId : result.collectionId;
+            let name = result.trackName ? result.trackName : result.collectionName;
+
+            tv.push({
+                id: id,
+                name: name,
+                artworkSrc: result.artworkUrl100
+            });
+        });
+        this.setState({
+            results: tv,
+            media: 'tvShow'
         });
     }
 
     render() {
         return (
             <div className="search-container">
-                <h1>iTunes Album Search</h1>
+                <h1>iTunes Search</h1>
                 <SearchForm onSubmit={this.handleSubmit}
                             onReset={this.handleReset} />
                 <hr />
-                <ResultList albums={this.state.albums}
+                <ResultList media={this.state.media}
+                            results={this.state.results}
                             searchDone={this.state.searchDone} />
             </div>
         );

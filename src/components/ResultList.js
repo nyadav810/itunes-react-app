@@ -1,27 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Album from './Album';
+import Tile from './Tile';
 import './styles/ResultList.css';
 
 function ResultList(props) {
-    let albumTiles = props.albums.map((album, index) =>
-        <div className="list-group-item col-md-4"
-            key={album.id}>
-            <Album
-                  name={album.name}
-                  explicit={album.explicit}
-                  artworkSrc={album.artworkSrc} />
-        </div>
-    );
+    let tiles;
+
+    switch (props.media) {
+        case 'music':
+            tiles = props.results.map((album, index) =>
+                <div className="list-group-item col-md-4"
+                    key={album.id}>
+                    <Album
+                          name={album.name}
+                          explicit={album.explicit}
+                          artworkSrc={album.artworkSrc} />
+                </div>
+            );
+            break;
+        case 'movie':
+            tiles = props.results.map((movie, index) =>
+                <div className="list-group-item col-md-4"
+                    key={movie.id}>
+                    <Tile
+                          name={movie.name}
+                          artworkSrc={movie.artworkSrc} />
+                </div>
+            );
+            break;
+        case 'tvShow':
+            tiles = props.results.map((tv, index) =>
+                <div className="list-group-item col-md-4"
+                    key={tv.id}>
+                    <Tile
+                          name={tv.name}
+                          artworkSrc={tv.artworkSrc} />
+                </div>
+            );
+            break;
+        default:
+            break;
+    }
 
     let rows = [];
 
-    for (let i = 0; i < albumTiles.length; i += 3) {
-        let row = [];
-        row.push(albumTiles[i], albumTiles[i + 1], albumTiles[i + 2]);
+    if (tiles) {
+        for (let i = 0; i < tiles.length; i += 3) {
+            let row = [];
+            row.push(tiles[i], tiles[i + 1], tiles[i + 2]);
 
-        let rowDiv = <div className="row" key={'row' + i}>{row}</div>;
-        rows.push(rowDiv);
+            let rowDiv = <div className="row" key={'row' + i}>{row}</div>;
+            rows.push(rowDiv);
+        }
     }
 
     // search performed, no results found
