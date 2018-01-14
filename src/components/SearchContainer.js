@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchForm from './SearchForm';
 import ResultList from './ResultList';
+import { Divider, Header, Icon } from 'semantic-ui-react';
 import './styles/SearchContainer.css';
 
 class SearchContainer extends React.Component {
@@ -14,8 +15,28 @@ class SearchContainer extends React.Component {
         };
     }
 
-    handleSubmit = (artist, media) => {
-        let url = `https://itunes.apple.com/search?term=${artist}&media=${media}`;
+    createQueryString = (searchTerm, media) => {
+        let url = `https://itunes.apple.com/search?term=${searchTerm}&media=${media}`;
+
+        switch (media) {
+            case 'music':
+                url += '&entity=album';
+                break;
+            case 'movie':
+                url += '&entity=movie';
+                break;
+            case 'tvShow':
+                url += '&entity=tvSeason';
+                break;
+            default:
+                break;
+        }
+
+        return url;
+    }
+
+    handleSubmit = (searchTerm, media) => {
+        let url = this.createQueryString(searchTerm, media);
 
         // make iTunes API GET request
         fetch(url).then(response => {
@@ -44,21 +65,13 @@ class SearchContainer extends React.Component {
         });
     }
 
-    handleReset = () => {
-        this.setState({
-            results: [],
-            searchDone: false,
-            media: 'music'
-        });
-    }
-
     parseAlbums = results => {
         let albums = [];
         results.forEach(result => {
             let explicit = (result.collectionExplicitness === 'explicit');
 
             albums.push({
-                id: result.collectionId,
+                id: result.trackId,
                 name: result.collectionCensoredName,
                 explicit: explicit,
                 artworkSrc: result.artworkUrl100
@@ -109,10 +122,9 @@ class SearchContainer extends React.Component {
     render() {
         return (
             <div className="search-container">
-                <h1>iTunes Search</h1>
-                <SearchForm onSubmit={this.handleSubmit}
-                            onReset={this.handleReset} />
-                <hr />
+                <Header as='h1'>iTunes Search</Header>
+                <SearchForm onSubmit={this.handleSubmit} />
+                <Divider />
                 <ResultList media={this.state.media}
                             results={this.state.results}
                             searchDone={this.state.searchDone} />

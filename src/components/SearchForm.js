@@ -1,75 +1,80 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MediaOptions from './MediaOptions'
-import './styles/SearchForm.css';
+import { Form, Grid, Radio } from 'semantic-ui-react';
 
 class SearchForm extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            searchBoxText: '',
-            mediaOption: 'music'
+            searchTerm: '',
+            media: 'music'
         };
     }
 
-    handleSearchBoxChange = event => {
-        this.setState({
-            searchBoxText: event.target.value
-        })
-    };
+    handleInputChange = (event, {value}) => this.setState({ searchTerm: value });
 
-    handleMediaOptionChange = event => {
-        this.setState({
-            mediaOption: event.target.value
-        });
-    }
-
-    handleReset = event => {
-        this.setState({
-            searchBoxText: '',
-            mediaOption: 'music'
-        });
-
-        this.props.onReset();
-    }
+    handleRadioChange = (event, {value}) => this.setState({ media: value });
 
     handleSubmit = event => {
-        event.preventDefault();
+        if (this.state.searchTerm) {
+            this.props.onSubmit(this.state.searchTerm, this.state.media)
+        } else {
 
-        this.props.onSubmit(this.state.searchBoxText, this.state.mediaOption);
-    }
+        }
+    };
 
     render() {
         return (
-            <div className="submit-form container">
-                <form className="form-group justify-content-center"
-                      onSubmit={this.handleSubmit}
-                      autoComplete="off">
-                    <input type="search"
-                           className="form-control"
-                           name="searchBox"
-                           placeholder="Enter an Artist"
-                           onChange={this.handleSearchBoxChange}
-                           autoFocus />
-                    <MediaOptions checked={this.state.mediaOption}
-                                  onChange={this.handleMediaOptionChange} />
-                    <input type="submit"
-                           className="btn btn-primary"
-                           value="Search"
-                           disabled={!this.state.searchBoxText } />
-                    <input className="btn btn-danger"
-                           type="reset"
-                           value="Reset"
-                           onClick={this.handleReset} />
-                </form>
-            </div>
+            <Form onSubmit={this.handleSubmit}>
+                <Grid centered
+                      textAlign='center'>
+                    <Grid.Column width={6}>
+                        <Form.Input
+                            autoFocus
+                            action={{ icon: 'search', color: 'blue' }}
+                            placeholder='Search'
+                            onChange={this.handleInputChange}
+                            size='large'/>
+                        <Grid centered
+                              textAlign='center'>
+                              <Grid.Row>
+                                  <Form.Group>
+                                       <Form.Field>
+                                           <Radio
+                                              label='Music'
+                                              name='radioGroup'
+                                              value='music'
+                                              checked={this.state.media === 'music'}
+                                              onChange={this.handleRadioChange} />
+                                       </Form.Field>
+                                       <Form.Field>
+                                           <Radio
+                                              label='Movies'
+                                              name='radioGroup'
+                                              value='movie'
+                                              checked={this.state.media === 'movie'}
+                                              onChange={this.handleRadioChange} />
+                                       </Form.Field>
+                                       <Form.Field>
+                                           <Radio
+                                              label='TV'
+                                              name='radioGroup'
+                                              value='tvShow'
+                                              checked={this.state.media === 'tvShow'}
+                                              onChange={this.handleRadioChange} />
+                                       </Form.Field>
+                                  </Form.Group>
+                              </Grid.Row>
+                        </Grid>
+                    </Grid.Column>
+                </Grid>
+            </Form>
         );
     }
 }
 
 SearchForm.propTypes = {
-    onReset: PropTypes.func,
     onSubmit: PropTypes.func
 };
 
