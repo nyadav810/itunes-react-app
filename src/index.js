@@ -14,6 +14,6 @@ ReactDOM.render(
     <Provider store={store}>
         <App />
     </Provider>,
-    document.getElementById('albums-container')
+    document.getElementById('root')
 );
 registerServiceWorker();

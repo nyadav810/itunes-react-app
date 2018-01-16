@@ -1,8 +1,7 @@
 import React from 'react';
-import SearchForm from './SearchForm';
+import SearchForm1 from './SearchForm1';
 import ResultList from './ResultList';
-import { Divider, Header, Icon } from 'semantic-ui-react';
-import './styles/SearchContainer.css';
+import { Divider, Header } from 'semantic-ui-react';
 
 class SearchContainer extends React.Component {
     constructor(props) {
@@ -123,7 +122,7 @@ class SearchContainer extends React.Component {
         return (
             <div className="search-container">
                 <Header as='h1'>iTunes Search</Header>
-                <SearchForm onSubmit={this.handleSubmit} />
+                <SearchForm1 onSubmit={this.handleSubmit} />
                 <Divider />
                 <ResultList media={this.state.media}
                             results={this.state.results}

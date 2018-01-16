@@ -1,13 +1,14 @@
 import React from 'react';
-import SearchContainer from './SearchContainer';
+import SearchFormContainer from '../containers/SearchFormContainer';
+import { Divider, Header } from 'semantic-ui-react';
 import './styles/App.css';
 
-function App(props) {
-    return (
-      <div className="App">
-        <SearchContainer />
-      </div>
-    );
-}
+const App = () => (
+    <div className="App">
+        <Header as='h1'>iTunes Search</Header>
+        <SearchFormContainer />
+        <Divider />
+    </div>
+);
 
 export default App;
