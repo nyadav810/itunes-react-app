@@ -4,7 +4,6 @@ import { parseResponse } from './apiResponse';
 export const REQUEST_CONTENT = 'REQUEST_CONTENT';
 export const RECEIVE_CONTENT = 'RECEIVE_CONTENT';
 export const SET_SEARCH_TERM = 'SET_SEARCH_TERM';
-export const SET_SEARCH_RESULTS = 'SET_SEARCH_RESULTS';
 export const SET_MEDIA = 'SET_MEDIA';
 
 export const requestContent = (searchTerm) => ({
@@ -56,13 +55,6 @@ export const fetchContent = (searchTerm, media) => (
 export const setSearchTerm = (searchTerm) => ({
     type: SET_SEARCH_TERM,
     searchTerm
-});
-
-export const setSearchResults = (searchTerm, media, results) => ({
-    type: SET_SEARCH_RESULTS,
-    searchTerm,
-    response: parseResponse(media, results),
-    recievedAt: Date.now()
 });
 
 export const setMedia = (media) => ({

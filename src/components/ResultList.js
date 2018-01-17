@@ -1,41 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Album from './Album';
 import Tile from './Tile';
-import './styles/ResultList.css';
+import { Grid } from 'semantic-ui-react';
 
 function ResultList({ searchTerm, media, content }) {
     let tiles;
 
     if (content[searchTerm]) {
-        let results = content[searchTerm].items;
+        let results = content[searchTerm].items.sort((a, b) => {
+            return b.date - a.date;
+        });
 
-        switch (media) {
-            case 'music':
-                tiles = results.map((album, index) =>
-                    <div className="list-group-item col-md-4"
-                        key={album.id}>
-                        <Album
-                              name={album.name}
-                              explicit={album.explicit}
-                              artworkSrc={album.artworkSrc} />
-                    </div>
-                );
-                break;
-            case 'movie':
-            case 'tvShow':
-                tiles = results.map((tile, index) =>
-                    <div className="list-group-item col-md-4"
-                        key={tile.id}>
-                        <Tile
-                              name={tile.name}
-                              artworkSrc={tile.artworkSrc} />
-                    </div>
-                );
-                break;
-            default:
-                break;
-        }
+        tiles = results.map((tile, index) =>
+            <Grid.Column key={tile.id}
+                         textAlign='left'>
+                <Tile
+                      name={tile.name}
+                      artworkSrc={tile.artworkSrc}
+                      price={tile.price}
+                      genre={tile.genre}
+                      date={tile.date} />
+            </Grid.Column>
+        );
     }
 
     let rows = [];
@@ -45,7 +31,7 @@ function ResultList({ searchTerm, media, content }) {
             let row = [];
             row.push(tiles[i], tiles[i + 1], tiles[i + 2]);
 
-            let rowDiv = <div className="row" key={'row' + i}>{row}</div>;
+            let rowDiv = <Grid.Row>{row}</Grid.Row>;
             rows.push(rowDiv);
         }
     }
@@ -55,9 +41,22 @@ function ResultList({ searchTerm, media, content }) {
     //     rows = <h2>No results found.</h2>;
     // }
 
+    let isGridVisible = rows.length ? 'visible' : 'hidden';
+
     return (
-        <div className="result-list">
-            <div className="container">{rows}</div>
+        <div className="result-list"
+             style={{
+                 visibility: isGridVisible
+             }}>
+            <Grid
+                  columns={3}
+                  celled
+                  style={{
+                      maxWidth: 1200,
+                      margin: '0 auto'
+                  }}>
+                  { rows }
+            </Grid>
         </div>
     );
 }
