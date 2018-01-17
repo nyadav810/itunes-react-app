@@ -11,9 +11,6 @@ let SearchTextBox = ({ dispatch }) => {
             placeholder='Search'
             onChange={e => {
                 e.preventDefault();
-                if (!e.target.value.trim()) {
-                    return;
-                }
                 dispatch(setSearchTerm(e.target.value));
             }}
             size='large' />

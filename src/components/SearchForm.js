@@ -4,11 +4,11 @@ import { Form, Grid } from 'semantic-ui-react';
 import RadioButtonContainer from '../containers/RadioButtonContainer';
 import SearchTextBox from '../containers/SearchTextBox';
 
-const SearchForm = ({ onSubmit }) => {
+const SearchForm = ({ searchTerm, media, onSubmit }) => {
     return (
         <Form onSubmit={e => {
                         e.preventDefault();
-                        onSubmit(); }}>
+                        onSubmit(searchTerm, media); }}>
             <Grid centered
                   textAlign='center'>
                 <Grid.Column width={6}>
@@ -20,7 +20,7 @@ const SearchForm = ({ onSubmit }) => {
                                    <RadioButtonContainer label='Music'
                                                          value='music' />
                                    <RadioButtonContainer label='Movies'
-                                                         value='movies' />
+                                                         value='movie' />
                                    <RadioButtonContainer label='TV'
                                                          value='tvShow' />
                               </Form.Group>

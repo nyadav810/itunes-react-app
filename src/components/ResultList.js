@@ -4,43 +4,38 @@ import Album from './Album';
 import Tile from './Tile';
 import './styles/ResultList.css';
 
-function ResultList(props) {
+function ResultList({ searchTerm, media, content }) {
     let tiles;
 
-    switch (props.media) {
-        case 'music':
-            tiles = props.results.map((album, index) =>
-                <div className="list-group-item col-md-4"
-                    key={album.id}>
-                    <Album
-                          name={album.name}
-                          explicit={album.explicit}
-                          artworkSrc={album.artworkSrc} />
-                </div>
-            );
-            break;
-        case 'movie':
-            tiles = props.results.map((movie, index) =>
-                <div className="list-group-item col-md-4"
-                    key={movie.id}>
-                    <Tile
-                          name={movie.name}
-                          artworkSrc={movie.artworkSrc} />
-                </div>
-            );
-            break;
-        case 'tvShow':
-            tiles = props.results.map((tv, index) =>
-                <div className="list-group-item col-md-4"
-                    key={tv.id}>
-                    <Tile
-                          name={tv.name}
-                          artworkSrc={tv.artworkSrc} />
-                </div>
-            );
-            break;
-        default:
-            break;
+    if (content[searchTerm]) {
+        let results = content[searchTerm].items;
+
+        switch (media) {
+            case 'music':
+                tiles = results.map((album, index) =>
+                    <div className="list-group-item col-md-4"
+                        key={album.id}>
+                        <Album
+                              name={album.name}
+                              explicit={album.explicit}
+                              artworkSrc={album.artworkSrc} />
+                    </div>
+                );
+                break;
+            case 'movie':
+            case 'tvShow':
+                tiles = results.map((tile, index) =>
+                    <div className="list-group-item col-md-4"
+                        key={tile.id}>
+                        <Tile
+                              name={tile.name}
+                              artworkSrc={tile.artworkSrc} />
+                    </div>
+                );
+                break;
+            default:
+                break;
+        }
     }
 
     let rows = [];
@@ -56,9 +51,9 @@ function ResultList(props) {
     }
 
     // search performed, no results found
-    if (props.searchDone && !rows.length) {
-        rows = <h2>No results found.</h2>;
-    }
+    // if (props.searchDone && !rows.length) {
+    //     rows = <h2>No results found.</h2>;
+    // }
 
     return (
         <div className="result-list">
@@ -68,8 +63,9 @@ function ResultList(props) {
 }
 
 ResultList.propTypes = {
-    albums: PropTypes.array,
-    searchDone: PropTypes.bool
+    searchTerm: PropTypes.string,
+    media: PropTypes.string,
+    content: PropTypes.object
 };
 
 export default ResultList;

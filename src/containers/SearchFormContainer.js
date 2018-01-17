@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-//import { setSearchResults } from '../actions';
+import { fetchContent } from '../actions';
 import SearchForm from '../components/SearchForm';
 
 const mapStateToProps = (state) => ({
@@ -8,8 +8,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onSubmit: () => {
-        //dispatch();
+    onSubmit: (searchTerm, media) => {
+        if (searchTerm) {
+            dispatch(fetchContent(searchTerm, media));
+        }
     }
 });
 
